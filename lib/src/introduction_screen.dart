@@ -207,30 +207,42 @@ class IntroductionScreenState extends State<IntroductionScreen> {
       backgroundColor: widget.globalBackgroundColor,
       body: Stack(
         children: [
-          NotificationListener<ScrollNotification>(
-            onNotification: _onScroll,
-            child: PageView(
-              controller: _pageController,
-              physics: widget.freeze
-                  ? const NeverScrollableScrollPhysics()
-                  : const BouncingScrollPhysics(),
-              children: widget.pages.map((p) => IntroPage(page: p)).toList(),
-              onPageChanged: widget.onChange,
-            ),
+          Column(
+            children: <Widget>[
+              SizedBox(
+                height: MediaQuery.of(context).padding.top + 20,
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: isLastPage
+                    ? doneBtn
+                    : widget.showNextButton
+                        ? nextBtn
+                        : Opacity(opacity: 0.0, child: nextBtn),
+              ),
+              Expanded(
+                child: NotificationListener<ScrollNotification>(
+                  onNotification: _onScroll,
+                  child: PageView(
+                    controller: _pageController,
+                    physics: widget.freeze
+                        ? const NeverScrollableScrollPhysics()
+                        : const BouncingScrollPhysics(),
+                    children:
+                        widget.pages.map((p) => IntroPage(page: p)).toList(),
+                    onPageChanged: widget.onChange,
+                  ),
+                ),
+              ),
+            ],
           ),
           Positioned(
-            bottom: 16.0,
+            bottom: 30,
             left: 16.0,
             right: 16.0,
             child: SafeArea(
               child: Row(
                 children: [
-                  Expanded(
-                    flex: widget.skipFlex,
-                    child: isSkipBtn
-                        ? skipBtn
-                        : Opacity(opacity: 0.0, child: skipBtn),
-                  ),
                   Expanded(
                     flex: widget.dotsFlex,
                     child: Center(
@@ -245,14 +257,6 @@ class IntroductionScreenState extends State<IntroductionScreen> {
                             )
                           : const SizedBox(),
                     ),
-                  ),
-                  Expanded(
-                    flex: widget.nextFlex,
-                    child: isLastPage
-                        ? doneBtn
-                        : widget.showNextButton
-                            ? nextBtn
-                            : Opacity(opacity: 0.0, child: nextBtn),
                   ),
                 ],
               ),
